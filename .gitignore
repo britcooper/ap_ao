@@ -1,0 +1,11 @@
+# Ignore Mac system files
+.DS_store
+
+# Ignore all text files
+*.txt
+
+# Ignore all .fits files
+*.fits
+
+# Ignore all .png files
+*.png
