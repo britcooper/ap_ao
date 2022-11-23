@@ -60,10 +60,7 @@ Pyds9 and ds9 connection issues have been a [problem in the past](https://github
 To thwart this, the `XPA_METHOD`  value can be set to `localhost` 
 in both the DS9 environemnt and the python environment. 
 
-It is necessary for `ap_ao.py` to set this value before `import pyds9` for it to be effective.
-
-The optional bash wrapper also sets this key value in the ds9 environment before calling `ap_ao.sh`. 
-If `ap_ao.sh` is not used or modified for your local env and you are using a conda install of ds9, this key may need to be set after your environment is activated.
+It may be necessary for `ap_ao.py` to set this value before `import pyds9` for it to be effective.
 
 
 ## Future Improvements (TBD)
