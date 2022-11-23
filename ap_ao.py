@@ -79,7 +79,7 @@ def get_centre():
     """Prompt user to input central coordinates, and asks for confirmation. Returns coordinates"""
     print('\nEnlarge image and hover curser over approximate center of the object to determine pixel coordinates...')
     while True:
-        coords1=input('\nType coordinates separarted by a comma (i.e. <X>,<Y>) and press return: ')
+        coords1=input('\nType coordinates separated by a comma (i.e. <X>,<Y>) and press return: ')
         happy=input(f'\nAre these coordinates {coords1} correct? (y/n): ')
         if happy == 'y':
             print('\nYay!')
@@ -326,13 +326,8 @@ def main(args):
         
 def create_parser():
     """Argument parser, will display help."""
-    desp="""Gemini North Altair target aperture flux assessment. Runs over HST WFPC2 c0m files in current directory, 
-    and the user will be prompted for inputs. 
-    Returns: Figure displaying apertures and flux [.png],
-    figure displaying the profiles of the object with the Moffat fit and FWHM [.png], 
-    file containing object name, aperture summed flux, FWHM, converted Johnson R band magnitude"""
-    parser = argparse.ArgumentParser(description=desp, epilog='Version: ' + __version__)
-    parser.add_argument('-f', '--filename', nargs='?', default=None, help='filename for output results' )
+    parser = argparse.ArgumentParser(description="Gemini North Altair target aperture flux assessment. Runs over HST WFPC2 c0m files in current directory, and the user will be prompted for inputs.", epilog='Version: ' + __version__)
+    parser.add_argument('-f', '--filename', nargs='?', default=None, help='Optional: customize filename for output results' )
     return parser
 
 

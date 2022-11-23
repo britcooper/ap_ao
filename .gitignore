@@ -9,3 +9,6 @@
 
 # Ignore all .png files
 *.png
+
+# Ignore all .sh wrappers
+*.sh
