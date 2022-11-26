@@ -67,7 +67,7 @@ It may be necessary for `ap_ao.py` to set this value before `import pyds9` for i
 
 Some useful updates to be added in the future (TBD):
 
-* Improve for CR detection (i.e. show and ask user if they want it or if it inadvertantly the target of interest) 
+* Improve for CR detection (i.e. show and ask user if they want it or if it affects the target of interest) 
 * Make useful for HST PCI and WPC3 to expand range of targets 
 
 
