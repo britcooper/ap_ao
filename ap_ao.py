@@ -28,7 +28,7 @@ TBD
 
 """
 
-__version__ = '20221121'
+__version__ = '20220313'
 __author__ = 'bcooper, astephens'
 
 import warnings
@@ -51,7 +51,7 @@ from scipy.interpolate import interp1d
 
 # Ensuring XPA methods match for pyds9 import, and pointing to stsynphot config files
 os.environ['XPA_METHOD']='localhost' 
-os.environ['PYSYN_CDBS']='/Users/bcooper/Documents/PT_AO/trds'
+os.environ['PYSYN_CDBS']='/Users/bcooper/Documents/PT_AO/trds' #update with your filepath
 import pyds9
 from synphot import SourceSpectrum, Observation
 import stsynphot
@@ -216,7 +216,7 @@ def main(args):
     else:
         fout ='results.txt'
     f      = open(f'{fout}', 'w')
-    header = ['OBJECT ', 'FWHM(") ', 'AP_FLUX(erg/cm2/s/A) ', 'AP_FLUX_UNSUB(erg/cm2/s/A) ', 'SKY_MEAN(erg/cm2/s/A) ', 'HST_FILT ', 'FILT_MAG ', 'R_MAG ', 'R_MAG_UNCERT ', 'R_MAG_UNSUB ']
+    header = ['OBJECT ', 'FWHM(") ', 'AP_FLUX(erg/cm2/s/A) ', 'AP_FLUX_UNSUB(erg/cm2/s/A) ', 'SKY_MEAN(erg/cm2/s/A) ', 'HST_FILT ', 'FILT_MAG ', 'R_MAG ', 'R_MAG_UNCERT ', 'R_MAG_UNSUB ', 'R_MAG_UNSUB_UNCERT ']
     f.writelines(header)
     f.close()
     
@@ -287,10 +287,14 @@ def main(args):
                 if imgs[i][j]<0:
                     imgs[i][j]=0
         error          = np.sqrt(imgs/exptime) #[ADU/s]
+        print(np.mean((error)))
+        print(np.std(sky)/np.sum(sky))
         phot_table_sub = pap.aperture_photometry(imgs/exptime-bkg, ap, error=error) # with background subtraction [ADU/s]
         phot_table     = pap.aperture_photometry(imgs/exptime, ap, error=error) # without background subtraction [ADU/s]
         bgsf           = flux - bkg * photflam #background subtracted flux [erg/cm2/s/A]
-        uncert         = 2.5 * np.log10(1 + np.sqrt((phot_table_sub['aperture_sum_err'].data)**2 + (np.std(sky)/(np.sqrt(np.shape(imgs)[0] * np.shape(imgs)[1])))**2))
+        uncert         = 2.5 * np.log10(1 + np.sqrt((phot_table_sub['aperture_sum_err'].data)**2 + np.sqrt(np.std(sky)/np.sum(sky))**2)/phot_table_sub['aperture_sum'].data)
+        uncert_nosub   = 2.5 * np.log10(1 + np.sqrt(phot_table['aperture_sum_err'].data/phot_table['aperture_sum'].data)**2)
+
         print(f"\nSummed Aperture Flux: {float(phot_table_sub['aperture_sum'].data * photflam)} erg/cm2/s/A")
         
         
@@ -355,7 +359,7 @@ def main(args):
         
         # Append results to file
         f = open(f'{fout}', 'a')
-        vals=[f'{objName} ', f'{fwhm/11:.3f} ', f"{float(phot_table_sub['aperture_sum'].data * photflam)} ", f"{float(phot_table['aperture_sum'].data * photflam)} " , f'{bkg * photflam} ' , f'{filt} ' ,f'{mfilt:.3f} ', f'{rmag:.3f} ', f'{uncert[0]:.3f} ', f'{rmag_usub:.3f} ']
+        vals=[f'{objName} ', f'{fwhm/11:.3f} ', f"{float(phot_table_sub['aperture_sum'].data * photflam)} ", f"{float(phot_table['aperture_sum'].data * photflam)} " , f'{bkg * photflam} ' , f'{filt} ' ,f'{mfilt:.3f} ', f'{rmag:.3f} ', f'{uncert[0]:.3f} ', f'{rmag_usub:.3f} ', f'{uncert_nosub[0]:.3f} ']
         f.write('\n')
         f.writelines(vals)
         f.close()
